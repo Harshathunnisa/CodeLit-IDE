@@ -1,4 +1,7 @@
 var defaultUrl = localStorageGetItem("api-url") || "https://secure.judge0.com/standard";
+const outputapi=process.env.URL;
+const outputtoken=process.env.TOKEN;
+const outtoken=process.env.OUT_TOKEN;
 var apiUrl = " https://api.judge0.com";
 var wait = localStorageGetItem("wait") || false;
 var pbUrl = "https://pb.judge0.com";
@@ -256,44 +259,6 @@ function getIdFromURI() {
   return uri.split("&")[0];
 }
 
-// function save() {
-//     var content = JSON.stringify({
-//         source_code: encode(sourceEditor.getValue()),
-//         language_id: $selectLanguage.val(),
-//         compiler_options: $compilerOptions.val(),
-//         command_line_arguments: $commandLineArguments.val(),
-//         stdin: encode(stdinEditor.getValue()),
-//         stdout: encode(stdoutEditor.getValue()),
-//         stderr: encode(stderrEditor.getValue()),
-//         compile_output: encode(compileOutputEditor.getValue()),
-//         sandbox_message: encode(sandboxMessageEditor.getValue()),
-//         status_line: encode($statusLine.html())
-//     });
-//     var filename = "judge0-ide.json";
-//     var data = {
-//         content: content,
-//         filename: filename
-//     };
-
-//     $.ajax({
-//         url: pbUrl,
-//         type: "POST",
-//         async: true,
-//         headers: {
-//             "Accept": "application/json"
-//         },
-//         data: data,
-//         success: function (data, textStatus, jqXHR) {
-//             if (getIdFromURI() != data["short"]) {
-//                 window.history.replaceState(null, null, location.origin + location.pathname + "?" + data["short"]);
-//             }
-//         },
-//         error: function (jqXHR, textStatus, errorThrown) {
-//             handleError(jqXHR, textStatus, errorThrown);
-//         }
-//     });
-// }
-
 function downloadSource() {
     var value = parseInt($selectLanguage.val());
     download(sourceEditor.getValue(), fileNames[value], "text/plain");
@@ -390,12 +355,12 @@ function run() {
     var sendRequest = function(data) {
         timeStart = performance.now();
         $.ajax({
-            url: `https://judge0.p.rapidapi.com/submissions?base64_encoded=true&wait=${wait}`,
+            url: outputapi+`/submissions?base64_encoded=true&wait=${wait}`,
             type: "POST",
             async: true,
           "headers":{
             "X-RapidAPI-Host":"judge0.p.rapidapi.com",
-            "X-RapidAPI-Key":"5f4e4689f8mshfc171dc5a619e1ap1bd22ajsn022062085e03"
+            "X-RapidAPI-Key":outputtoken
           },
             contentType: "application/json",
             data: JSON.stringify(data),
@@ -444,11 +409,11 @@ function run() {
 
 function fetchSubmission(submission_token) {
     $.ajax({
-        url: "https://judge0.p.rapidapi.com/submissions/"+submission_token+"?base64_encoded=true",
+        url: outputapi+"/submissions/"+submission_token+"?base64_encoded=true",
         type: "GET",
         "headers": {
 		"x-rapidapi-host": "judge0.p.rapidapi.com",
-		"x-rapidapi-key": "2ef8579e00msh8f34677a1cdc1bfp1532e0jsnc5743428d194"
+		"x-rapidapi-key": outtoken
 	},
         async: true,
         success: function (data, textStatus, jqXHR) {
@@ -557,7 +522,7 @@ $(window).resize(function() {
 $(document).ready(function () {
     updateScreenElements();
 
-    console.log("Hey, Judge0 IDE is open-sourced: https://github.com/judge0/ide. Have fun!");
+    console.log("Hey, CodeLit IDE is open-sourced: https://github.com/judge0/ide. Have fun!");
 
     $selectLanguage = $("#select-language");
     // $select1Language = $("#select1-language");
