@@ -1,4 +1,5 @@
 var defaultUrl = localStorageGetItem("api-url") || "https://secure.judge0.com/standard";
+require('dotenv').config()
 const outputapi=process.env.URL;
 const outputtoken=process.env.TOKEN;
 const outtoken=process.env.OUT_TOKEN;
